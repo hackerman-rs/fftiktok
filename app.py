@@ -1,9 +1,7 @@
 from quart import Quart, redirect, send_file
-import aiohttp
 import requests
 
 app = Quart(__name__)
-http: aiohttp.ClientSession = None
 app.url_map.strict_slashes = False
 
 USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:104.0) Gecko/20100101 Firefox/104.0"
@@ -32,7 +30,7 @@ async def get_video_url(video_id: str):
     json = r.json()
     return json["itemInfo"]["itemStruct"]["video"]["downloadAddr"]
 
-async def get(url: str) -> aiohttp.ClientResponse:
+async def get(url: str):
     # TODO: make async
     return requests.get(url, headers={"User-Agent": USER_AGENT}, allow_redirects=False)
 
