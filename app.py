@@ -1,18 +1,16 @@
-from TikTokApi import TikTokApi
 from quart import Quart, redirect, send_file
+import aiohttp
 import requests
 
 app = Quart(__name__)
-api = None
+http: aiohttp.ClientSession = None
 app.url_map.strict_slashes = False
 
-@app.before_first_request
-async def setup():
-    global api
+USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:104.0) Gecko/20100101 Firefox/104.0"
 
-    with await TikTokApi.create() as ttapi:
-        api = ttapi
-
+# i love you pato
+VIDEO_API_ROUTE = "https://t.tiktok.com/api/item/detail/?itemId="
+# VIDEO_API_ROUTE = "http://localhost:4444/"
 
 @app.route("/")
 async def home():
@@ -26,10 +24,17 @@ async def common(_: str, video_id: str):
 
 @app.route("/t/<short_url>")
 async def t(short_url: str):
-    print("https://www.tiktok.com/t/" + short_url + "/")
-    r = requests.get("https://www.tiktok.com/t/" + short_url + "/", allow_redirects=False)
+    r = await get("https://www.tiktok.com/t/" + short_url + "/")
     return redirect(r.headers["Location"].replace("tiktok", "fftiktok"))
 
+async def get_video_url(video_id: str):
+    r = await get(VIDEO_API_ROUTE + video_id)
+    json = r.json()
+    return json["itemInfo"]["itemStruct"]["video"]["downloadAddr"]
+
+async def get(url: str) -> aiohttp.ClientResponse:
+    # TODO: make async
+    return requests.get(url, headers={"User-Agent": USER_AGENT}, allow_redirects=False)
 
 async def redirect_to_play(video_id: str):
-    return redirect((await api.video(id=video_id).info())["video"]["playAddr"])
+    return redirect(await get_video_url(video_id))
