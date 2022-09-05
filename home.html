@@ -3,46 +3,120 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400,700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans"
     rel="stylesheet"
   />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body {
-      background-color: #1f2022;
+    @media (prefers-color-scheme: dark) {
+      html {
+        color-scheme: dark;
+      }
+
+      body {
+        color: white;
+        background: #18181b;
+      }
+
+      * {
+        color: white;
+        font-family: "Noto Sans", sans-serif;
+        text-align: center;
+      }
+
+      main {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: 50px;
+      }
+
+      hr {
+        width: 25%;
+      }
+
+      @keyframes animatedBg {
+        0% {
+          background-position: 0% 0%;
+        }
+        100% {
+          background-position: 200% 0%;
+        }
+      }
+
+      .amogus {
+        margin-top: 0;
+        margin-bottom: 0;
+        color: transparent;
+        animation: animatedBg 1s linear infinite;
+        background-image: linear-gradient(
+          90deg,
+          rgba(255, 0, 0, 1) 0%,
+          rgba(255, 154, 0, 1) 10%,
+          rgba(208, 222, 33, 1) 20%,
+          rgba(79, 220, 74, 1) 30%,
+          rgba(63, 218, 216, 1) 40%,
+          rgba(47, 201, 226, 1) 50%,
+          rgba(28, 127, 238, 1) 60%,
+          rgba(95, 21, 242, 1) 70%,
+          rgba(186, 12, 248, 1) 80%,
+          rgba(251, 7, 217, 1) 90%,
+          rgba(255, 0, 0, 1) 100%
+        );
+        background-position: 0 0;
+        background-size: 200% 200%;
+        background-clip: text;
+        -webkit-background-clip: text;
+      }
     }
-    * {
-      color: whitesmoke;
-      font-family: "Roboto", sans-serif;
+
+    .amogusLink {
+      text-decoration: none;
+    }
+
+    .breaker {
+      margin: 2em;
     }
   </style>
 </head>
 <body>
-  <h1>fftiktok.com</h1>
-  <p>
-    for any given url, replace tiktok.com with <strong>ff</strong>tiktok.com to
-    download/embed a video
-  </p>
-  <p>
-    <a href="https://www.tiktok.com/@abrameng/video/7139246151500500270">
-      https://www.tiktok.com/@abrameng/video/7139246151500500270
-    </a>
-  </p>
-  <p>
-    <a href="https://www.fftiktok.com/@abrameng/video/7139246151500500270">
-      https://www.<strong>ff</strong>tiktok.com/@abrameng/video/7139246151500500270
-    </a>
-  </p>
-  <hr />
-  <p>a <a href="https://hackerman.rs">hackerman.rs</a> project</p>
-  <p>
-    part of the source code is available on
-    <a href="https://github.com/hackerman-rs/TikTokApi-Async">github</a>
-  </p>
-  <p>
-    if something breaks email
-    <a href="mailto:fftiktok@viomck.com">fftiktok@viomck.com</a>
-  </p>
-  <p>
-    <em>no guarantees are made about uptime, use at your own risk</em>
-  </p>
+  <main>
+    <h1>
+      <a href="https://hackerman.rs" class="amogusLink">
+        <span class="amogus">ඞ</span>
+      </a>
+      fftiktok.com
+    </h1>
+    <p>
+      for any given url, replace tiktok.com with <strong>ff</strong>tiktok.com
+      to download/embed a video
+    </p>
+    <p>
+      <span>
+        <a href="https://tiktok.com/@abrameng/video/7139246151500500270">
+          https://tiktok.com/@abrameng/video/7139246151500500270
+        </a>
+      </span>
+      <br />
+      <span>
+        <a href="https://fftiktok.com/@abrameng/video/7139246151500500270">
+          https://<strong>ff</strong>tiktok.com/@abrameng/video/7139246151500500270
+        </a>
+      </span>
+    </p>
+    <hr class="breaker" />
+    <span>a <a href="https://hackerman.rs">hackerman.rs</a> project</span>
+    <span>
+      part of the code:<span> </span>
+      <a href="https://github.com/hackerman-rs/TikTokApi-Async">github</a>
+    </span>
+    <span>
+      support:<span> </span>
+      <a href="mailto:fftiktok@viomck.com">fftiktok@viomck.com</a>
+    </span>
+    <span>
+      <em>no guarantees are made about uptime, use at your own risk</em>
+    </span>
+  </main>
 </body>
