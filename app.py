@@ -25,6 +25,11 @@ async def t(short_url: str):
     r = await get("https://www.tiktok.com/t/" + short_url + "/")
     return redirect(r.headers["Location"].replace("tiktok", "fftiktok"))
 
+# vm.tiktok.com/...
+@app.route("/<short_url>")
+async def vm(short_url: str):
+    return await t(short_url)
+
 async def get_video_url(video_id: str):
     r = await get(VIDEO_API_ROUTE + video_id)
     json = r.json()
