@@ -1,0 +1,13 @@
+{
+  "cloudflare": true,
+  "hmac_key": "CHANGE_ME",
+  "host": "fftiktok.com",
+  "https": true,
+  "postgres": {
+    "host": "127.0.0.1",
+    "port": 5432,
+    "database": "fftiktok",
+    "username": "fftiktok",
+    "password": "CHANGE_ME"
+  }
+}

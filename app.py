@@ -14,13 +14,19 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from quart import Quart, redirect, send_file, g
+from config import Config
+from quart import Quart, redirect, send_file, g, request
 import aiohttp
-import requests
+import asyncpg
+import hmac
+import json
+import stats
+import traceback
 
 app = Quart(__name__)
 app.url_map.strict_slashes = False
 http: aiohttp.ClientSession = None
+pool: asyncpg.Pool = None
 
 USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:104.0) Gecko/20100101 Firefox/104.0"
 
@@ -31,11 +37,27 @@ VIDEO_API_ROUTE = "https://t.tiktok.com/api/item/detail/?itemId="
 @app.before_serving
 async def setup():
     global http
+    global config
+    global pool
+
     http = aiohttp.ClientSession()
+
+    with open("config.json", "r") as f:
+        config = Config.from_dict(json.load(f))
+
+    pg_conf = config.postgres
+
+    pool = await asyncpg.create_pool(
+        f"postgres://{pg_conf.username}:{pg_conf.password}@" +
+        f"{pg_conf.host}:{pg_conf.port}/{pg_conf.database}"
+    )
+
+    await stats.init(pool)    
 
 @app.before_request
 async def before():
     g.http = http
+    g.pool = pool
 
 @app.route("/")
 async def home():
@@ -47,27 +69,72 @@ async def status():
 
 @app.route("/<_>/video/<video_id>")
 async def common(_: str, video_id: str):
-    return await redirect_to_play(video_id)  
+    orig = "direct"
+
+    if "orig" in request.args and "orig_hmac" in request.args:
+        orig = request.args.get("orig")
+        orig_hmac = request.args.get("orig_hmac")
+        orig_hmac_expected = hmac_encode(video_id + ":" + orig)
+
+        if not hmac.compare_digest(orig_hmac, orig_hmac_expected):
+            return "You trying to do something funky?", 400
+
+    try:
+        redir = await redirect_to_play(video_id)  
+    except:
+        traceback.print_exc()
+        return "Sorry -- looks like this video doesn't exist.", 400
+
+    await stats.record(get_ip(), request.headers["User-Agent"], video_id, orig)
+    return redir
 
 
 @app.route("/t/<short_url>")
 async def t(short_url: str):
     r = await get("https://www.tiktok.com/t/" + short_url + "/")
-    return redirect(r.headers["Location"].replace("tiktok", "fftiktok"))
+    loc = r.headers["Location"].replace("www.tiktok.com", config.host)
+
+    if not config.https:
+        loc = loc.replace("https://", "http://")
+
+    orig = "t:" + short_url
+
+    # you can technically forge this but i really do not care
+    if "from_vm" in request.args:
+        orig = "vm:" + short_url
+
+    # last element is video
+    orig_hmac = hmac_encode(loc.split("/")[-1].split("?")[0] + ":" + orig)
+
+    query_char = "?"
+
+    if "?" in loc:
+        query_char = "&"
+
+    return redirect(f"{loc}{query_char}orig={orig}&orig_hmac={orig_hmac}")
 
 # vm.tiktok.com/...
 @app.route("/<short_url>")
 async def vm(short_url: str):
-    return await t(short_url)
+    return redirect("/t/" + short_url + "?from_vm=1")
 
 async def get_video_url(video_id: str):
     r = await get(VIDEO_API_ROUTE + video_id)
-    json = r.json()
+    json = await r.json()
     return json["itemInfo"]["itemStruct"]["video"]["downloadAddr"]
 
 async def get(url: str):
     http: aiohttp.ClientSession = g.http
     return await http.get(url, headers={"User-Agent": USER_AGENT}, allow_redirects=False)
 
+def get_ip():
+    if config.cloudflare:
+        return request.headers.get("CF-Connecting-IP")
+    else:
+        return request.remote_addr
+
 async def redirect_to_play(video_id: str):
     return redirect(await get_video_url(video_id))
+
+def hmac_encode(input: str) -> str:
+    return hmac.digest(config.hmac_key.encode(), input.encode(), "sha256").hex()
