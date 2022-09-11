@@ -14,17 +14,28 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from quart import Quart, redirect, send_file
+from quart import Quart, redirect, send_file, g
+import aiohttp
 import requests
 
 app = Quart(__name__)
 app.url_map.strict_slashes = False
+http: aiohttp.ClientSession = None
 
 USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:104.0) Gecko/20100101 Firefox/104.0"
 
 # i love you pato
 VIDEO_API_ROUTE = "https://t.tiktok.com/api/item/detail/?itemId="
 # VIDEO_API_ROUTE = "http://localhost:4444/"
+
+@app.before_serving
+async def setup():
+    global http
+    http = aiohttp.ClientSession()
+
+@app.before_request
+async def before():
+    g.http = http
 
 @app.route("/")
 async def home():
@@ -55,8 +66,8 @@ async def get_video_url(video_id: str):
     return json["itemInfo"]["itemStruct"]["video"]["downloadAddr"]
 
 async def get(url: str):
-    # TODO: make async
-    return requests.get(url, headers={"User-Agent": USER_AGENT}, allow_redirects=False)
+    http: aiohttp.ClientSession = g.http
+    return await http.get(url, headers={"User-Agent": USER_AGENT}, allow_redirects=False)
 
 async def redirect_to_play(video_id: str):
     return redirect(await get_video_url(video_id))
