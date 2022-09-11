@@ -30,6 +30,9 @@ VIDEO_API_ROUTE = "https://t.tiktok.com/api/item/detail/?itemId="
 async def home():
     return await send_file("home.html")
 
+@app.route("/api/status")
+async def status():
+    return "ඞ"
 
 @app.route("/<_>/video/<video_id>")
 async def common(_: str, video_id: str):
