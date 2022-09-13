@@ -18,67 +18,78 @@
         background: #18181b;
       }
 
-      * {
+      a,
+      a:visited {
         color: white;
-        font-family: "Noto Sans", sans-serif;
-        text-align: center;
       }
+    }
 
-      main {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        margin-top: 50px;
+    @media (prefers-color-scheme: light) {
+      a,
+      a:visited {
+        color: black;
       }
+    }
 
-      hr {
-        width: 25%;
-      }
+    * {
+      font-family: "Noto Sans", sans-serif;
+      text-align: center;
+    }
 
-      @keyframes animatedBg {
-        0% {
-          background-position: 0% 0%;
-        }
-        100% {
-          background-position: 200% 0%;
-        }
-      }
+    main {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-top: 50px;
+    }
 
-      a {
-        overflow-wrap: break-word;
-        word-wrap: break-word;
-        word-break: break-word;
-      }
+    hr {
+      width: 25%;
+    }
 
-      strong {
-        font-weight: bolder;
+    @keyframes animatedBg {
+      0% {
+        background-position: 0% 0%;
       }
+      100% {
+        background-position: 200% 0%;
+      }
+    }
 
-      .amogus {
-        margin-top: 0;
-        margin-bottom: 0;
-        color: transparent;
-        animation: animatedBg 1s linear infinite;
-        background-image: linear-gradient(
-          90deg,
-          rgba(255, 0, 0, 1) 0%,
-          rgba(255, 154, 0, 1) 10%,
-          rgba(208, 222, 33, 1) 20%,
-          rgba(79, 220, 74, 1) 30%,
-          rgba(63, 218, 216, 1) 40%,
-          rgba(47, 201, 226, 1) 50%,
-          rgba(28, 127, 238, 1) 60%,
-          rgba(95, 21, 242, 1) 70%,
-          rgba(186, 12, 248, 1) 80%,
-          rgba(251, 7, 217, 1) 90%,
-          rgba(255, 0, 0, 1) 100%
-        );
-        background-position: 0 0;
-        background-size: 200% 200%;
-        background-clip: text;
-        -webkit-background-clip: text;
-      }
+    a {
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      word-break: break-word;
+    }
+
+    strong {
+      font-weight: bolder;
+    }
+
+    .amogus {
+      margin-top: 0;
+      margin-bottom: 0;
+      color: transparent;
+      animation: animatedBg 1s linear infinite;
+      background-image: linear-gradient(
+        90deg,
+        rgba(255, 0, 0, 1) 0%,
+        rgba(255, 154, 0, 1) 10%,
+        rgba(208, 222, 33, 1) 20%,
+        rgba(79, 220, 74, 1) 30%,
+        rgba(63, 218, 216, 1) 40%,
+        rgba(47, 201, 226, 1) 50%,
+        rgba(28, 127, 238, 1) 60%,
+        rgba(95, 21, 242, 1) 70%,
+        rgba(186, 12, 248, 1) 80%,
+        rgba(251, 7, 217, 1) 90%,
+        rgba(255, 0, 0, 1) 100%
+      );
+      background-position: 0 0;
+      background-size: 200% 200%;
+      background-clip: text;
+      -webkit-background-clip: text;
     }
 
     .amogusLink {
