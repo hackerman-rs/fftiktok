@@ -118,6 +118,10 @@ async def t(short_url: str):
 async def vm(short_url: str):
     return redirect("/t/" + short_url + "?from_vm=1")
 
+@app.get("/api-tos.txt")
+async def api_tos():
+    return await send_file("api-tos.txt")
+
 async def get_video_url(video_id: str):
     r = await get(VIDEO_API_ROUTE + video_id)
     json = await r.json()
@@ -138,7 +142,10 @@ async def redirect_to_play(video_id: str):
         user_agent = request.headers["User-Agent"]
         for banned_phrase in config.banned_user_agent_phrases:
             if banned_phrase in user_agent:
-                return "Banned - please contact fftiktok[at]viomck.com if you think this was done in error.", 403
+                return (
+                    "Banned - please contact fftiktok[at]viomck.com if you think this was done in error." +
+                    "\nAutomated usage guidelines: https://fftiktok.com/api-tos.txt."
+                ), 403
     return redirect(await get_video_url(video_id))
 
 def hmac_encode(input: str) -> str:

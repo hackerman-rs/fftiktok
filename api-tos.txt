@@ -1,0 +1,27 @@
+hi!
+
+fftiktok is made by a single developer and is made for use among friends.  i
+don't have a legal team or abuse team to be able to investigate malicious
+usage, but i do investigate some weird things every now and then.
+
+all i really ask is:
+    1. please don't use this for any scams
+    2. please don't send me an ungodly amount of requests, the server this runs
+      on is tiny
+    3. please don't use this to do anything illegal
+
+i do reserve the right to block any browser at any point.  if this happens to
+you, you will receive a 403 forbidden error and a message on how to resolve it.
+
+i highly recommend calling the tiktok api yourself, or even running fftiktok 
+yourself if you need large-scale usage, as it'll make sure you don't depend
+on a service you shouldn't depend on (mine), and you won't ruin other people's
+days from large request volumes.
+
+if you use a generic user-agent (you don't customize the one from your request
+library), you may be swept up in blocks that aren't your fault.  i highly
+recommend setting a user-agent to something descriptibe, preferably with a url
+&/or email so i can make sure you aren't doing anything evil.
+
+thank you for using fftiktok!  if you have questions, email me:
+fftiktok-devs@viomck.com
