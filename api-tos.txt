@@ -7,7 +7,7 @@ usage, but i do investigate some weird things every now and then.
 all i really ask is:
     1. please don't use this for any scams
     2. please don't send me an ungodly amount of requests, the server this runs
-      on is tiny
+       on is tiny
     3. please don't use this to do anything illegal
 
 i do reserve the right to block any browser at any point.  if this happens to
@@ -20,7 +20,7 @@ days from large request volumes.
 
 if you use a generic user-agent (you don't customize the one from your request
 library), you may be swept up in blocks that aren't your fault.  i highly
-recommend setting a user-agent to something descriptibe, preferably with a url
+recommend setting a user-agent to something descriptive, preferably with a url
 &/or email so i can make sure you aren't doing anything evil.
 
 thank you for using fftiktok!  if you have questions, email me:
