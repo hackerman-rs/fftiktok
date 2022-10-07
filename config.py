@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 class PostgresConfig:
     host: str
@@ -43,6 +43,7 @@ class Config:
     host: str
     https: bool
     postgres: PostgresConfig
+    banned_user_agent_phrases: List[str]
     
     def __init__(
         self, 
@@ -51,12 +52,14 @@ class Config:
         host: str,
         https: bool,
         postgres: PostgresConfig,
+        banned_user_agent_phrases: List[str],
     ):
         self.cloudflare = cloudflare
         self.hmac_key = hmac_key
         self.host = host
         self.https = https
         self.postgres = postgres
+        self.banned_user_agent_phrases = banned_user_agent_phrases
     
     def from_dict(d: Dict[str, Any]):
         pg: Dict[str, Any] = d["postgres"]
@@ -65,6 +68,7 @@ class Config:
             hmac_key=d["hmac_key"],
             host=d["host"],
             https=d["https"],
+            banned_user_agent_phrases=d["banned_user_agent_phrases"],
             postgres=PostgresConfig(
                 host=pg["host"],
                 port=pg["port"],

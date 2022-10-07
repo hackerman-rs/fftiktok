@@ -9,5 +9,6 @@
     "database": "fftiktok",
     "username": "fftiktok",
     "password": "CHANGE_ME"
-  }
+  },
+  "banned_user_agent_phrases": []
 }
