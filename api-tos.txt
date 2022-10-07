@@ -24,4 +24,4 @@ recommend setting a user-agent to something descriptibe, preferably with a url
 &/or email so i can make sure you aren't doing anything evil.
 
 thank you for using fftiktok!  if you have questions, email me:
-fftiktok-devs@viomck.com
+fftiktok[at]viomck.com
