@@ -144,7 +144,7 @@ async def redirect_to_play(video_id: str):
             if banned_phrase in user_agent:
                 return (
                     "Banned - please contact fftiktok[at]viomck.com if you think this was done in error." +
-                    "\nAutomated usage guidelines: https://fftiktok.com/api-tos.txt."
+                    '<br>Automated usage guidelines: <a href="/api-tos.txt">fftiktok.com/api-tos.txt</a>'
                 ), 403
     return redirect(await get_video_url(video_id))
 
