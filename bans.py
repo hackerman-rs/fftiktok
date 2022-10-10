@@ -23,7 +23,6 @@ async def is_banned() -> bool:
 
         ua = request.headers.get("User-Agent").lower()
 
-        print(f"{ua} {phrases}")
         for phrase in phrases:
             if phrase.lower() in ua:
                 return True
