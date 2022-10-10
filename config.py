@@ -16,6 +16,7 @@
 
 from typing import Any, Dict, List
 
+
 class PostgresConfig:
     host: str
     port: int
@@ -24,9 +25,9 @@ class PostgresConfig:
     password: str
 
     def __init__(
-        self, 
-        host: str, 
-        port: int, 
+        self,
+        host: str,
+        port: int,
         database: str,
         username: str,
         password: str,
@@ -37,30 +38,28 @@ class PostgresConfig:
         self.username = username
         self.password = password
 
+
 class Config:
     cloudflare: bool
     hmac_key: str
     host: str
     https: bool
     postgres: PostgresConfig
-    banned_user_agent_phrases: List[str]
-    
+
     def __init__(
-        self, 
-        cloudflare: bool, 
-        hmac_key: str, 
+        self,
+        cloudflare: bool,
+        hmac_key: str,
         host: str,
         https: bool,
         postgres: PostgresConfig,
-        banned_user_agent_phrases: List[str],
     ):
         self.cloudflare = cloudflare
         self.hmac_key = hmac_key
         self.host = host
         self.https = https
         self.postgres = postgres
-        self.banned_user_agent_phrases = banned_user_agent_phrases
-    
+
     def from_dict(d: Dict[str, Any]):
         pg: Dict[str, Any] = d["postgres"]
         return Config(
@@ -68,7 +67,6 @@ class Config:
             hmac_key=d["hmac_key"],
             host=d["host"],
             https=d["https"],
-            banned_user_agent_phrases=d["banned_user_agent_phrases"],
             postgres=PostgresConfig(
                 host=pg["host"],
                 port=pg["port"],

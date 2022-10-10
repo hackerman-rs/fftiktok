@@ -18,6 +18,7 @@ from config import Config
 from quart import Quart, redirect, send_file, g, request
 import aiohttp
 import asyncpg
+import bans
 import hmac
 import json
 import stats
@@ -33,6 +34,7 @@ USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:104.0) Gecko/2010
 # i love you pato
 VIDEO_API_ROUTE = "https://t.tiktok.com/api/item/detail/?itemId="
 # VIDEO_API_ROUTE = "http://localhost:4444/"
+
 
 @app.before_serving
 async def setup():
@@ -52,20 +54,25 @@ async def setup():
         f"{pg_conf.host}:{pg_conf.port}/{pg_conf.database}"
     )
 
-    await stats.init(pool)    
+    await stats.init(pool)
+    await bans.init(pool)
+
 
 @app.before_request
 async def before():
     g.http = http
     g.pool = pool
 
+
 @app.route("/")
 async def home():
     return await send_file("home.html")
 
+
 @app.route("/api/status")
 async def status():
     return "ඞ"
+
 
 @app.route("/<_>/video/<video_id>")
 async def common(_: str, video_id: str):
@@ -80,7 +87,7 @@ async def common(_: str, video_id: str):
             return "You trying to do something funky?", 400
 
     try:
-        redir = await redirect_to_play(video_id)  
+        redir = await redirect_to_play(video_id)
     except:
         traceback.print_exc()
         return "Sorry -- looks like this video doesn't exist.", 400
@@ -114,22 +121,28 @@ async def t(short_url: str):
     return redirect(f"{loc}{query_char}orig={orig}&orig_hmac={orig_hmac}")
 
 # vm.tiktok.com/...
+
+
 @app.route("/<short_url>")
 async def vm(short_url: str):
     return redirect("/t/" + short_url + "?from_vm=1")
 
+
 @app.get("/api-tos.txt")
 async def api_tos():
     return await send_file("api-tos.txt")
+
 
 async def get_video_url(video_id: str):
     r = await get(VIDEO_API_ROUTE + video_id)
     json = await r.json()
     return json["itemInfo"]["itemStruct"]["video"]["downloadAddr"]
 
+
 async def get(url: str):
     http: aiohttp.ClientSession = g.http
     return await http.get(url, headers={"User-Agent": USER_AGENT}, allow_redirects=False)
+
 
 def get_ip():
     if config.cloudflare:
@@ -137,16 +150,15 @@ def get_ip():
     else:
         return request.remote_addr
 
+
 async def redirect_to_play(video_id: str):
-    if "User-Agent" in request.headers:
-        user_agent = request.headers["User-Agent"]
-        for banned_phrase in config.banned_user_agent_phrases:
-            if banned_phrase in user_agent:
-                return (
-                    "Banned - please contact fftiktok[at]viomck.com if you think this was done in error." +
-                    '<br>Automated usage guidelines: <a href="/api-tos.txt">fftiktok.com/api-tos.txt</a>'
-                ), 403
+    if await bans.is_banned():
+        return (
+            "Banned - please contact fftiktok[at]viomck.com if you think this was done in error." +
+            '<br>Automated usage guidelines: <a href="/api-tos.txt">fftiktok.com/api-tos.txt</a>'
+        ), 403
     return redirect(await get_video_url(video_id))
+
 
 def hmac_encode(input: str) -> str:
     return hmac.digest(config.hmac_key.encode(), input.encode(), "sha256").hex()
