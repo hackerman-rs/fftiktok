@@ -100,8 +100,12 @@ async def common(_: str, video_id: str):
 async def t(short_url: str):
     r = await get("https://www.tiktok.com/t/" + short_url + "/")
     loc = r.headers["Location"]
-    r = await get(loc)
-    loc = r.headers["Location"].replace("www.tiktok.com", config.host)
+
+    if ".html" in loc:
+        r = await get(loc)
+        loc = r.headers["Location"]
+
+    loc = loc.replace("www.tiktok.com", config.host)
 
     if not config.https:
         loc = loc.replace("https://", "http://")
