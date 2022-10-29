@@ -9,5 +9,9 @@
     "database": "fftiktok",
     "username": "fftiktok",
     "password": "CHANGE_ME"
+  },
+  "webhook": {
+    "url": "https://discord.com/api/webhooks/.../...",
+    "user_id": "..."
   }
 }

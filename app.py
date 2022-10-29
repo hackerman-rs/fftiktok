@@ -71,7 +71,19 @@ async def home():
 
 @app.route("/api/status")
 async def status():
-    return "ඞ"
+    try:
+        await vm("ZTRHTQyY8")
+        return "ඞ"
+    except Exception as e:
+        http: aiohttp.ClientSession = g.http
+        await http.post(
+            config.webhook.url,
+            data=json.dumps(
+                {"content": f"<@{config.webhook.user_id}> fftiktok failure: \n\n{e}\n{traceback.format_exc()}"}
+            ),
+            headers={"Content-Type": "application/json"}
+        )
+        return "😨", 500
 
 
 @app.route("/<_>/video/<video_id>")

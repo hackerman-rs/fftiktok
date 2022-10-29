@@ -39,12 +39,22 @@ class PostgresConfig:
         self.password = password
 
 
+class WebhookConfig:
+    url: str
+    user_id: str
+
+    def __init__(self, url: str, user_id: str):
+        self.url = url
+        self.user_id = user_id
+
+
 class Config:
     cloudflare: bool
     hmac_key: str
     host: str
     https: bool
     postgres: PostgresConfig
+    webhook: WebhookConfig
 
     def __init__(
         self,
@@ -53,15 +63,18 @@ class Config:
         host: str,
         https: bool,
         postgres: PostgresConfig,
+        webhook: WebhookConfig
     ):
         self.cloudflare = cloudflare
         self.hmac_key = hmac_key
         self.host = host
         self.https = https
         self.postgres = postgres
+        self.webhook = webhook
 
     def from_dict(d: Dict[str, Any]):
         pg: Dict[str, Any] = d["postgres"]
+        w: Dict[str, str] = d["webhook"]
         return Config(
             cloudflare=d["cloudflare"],
             hmac_key=d["hmac_key"],
@@ -74,4 +87,8 @@ class Config:
                 username=pg["username"],
                 password=pg["password"],
             ),
+            webhook=WebhookConfig(
+                url=w["url"],
+                user_id=w["user_id"],
+            )
         )
