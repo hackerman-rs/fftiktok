@@ -154,7 +154,7 @@ async def api_tos():
 async def get_video_url(video_id: str):
     r = await get(VIDEO_API_ROUTE + video_id)
     json = await r.json()
-    return json["itemInfo"]["itemStruct"]["video"]["downloadAddr"]
+    return json["itemInfo"]["itemStruct"]["video"]["playAddr"]
 
 
 async def get(url: str):
